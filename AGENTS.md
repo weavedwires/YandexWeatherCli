@@ -3,8 +3,12 @@
 ## Build & Run
 
 ```bash
-mvn package -q                              # builds shaded uber-jar
-java -jar target/yweather-1.0.0.jar --lat <lat> --lon <lon> [options]
+mvn package -q                              # builds uber-jar + shell wrapper
+mkdir -p ~/.local/bin
+cp target/appassembler/bin/yweather ~/.local/bin/
+cp target/yweather-1.0.0.jar ~/.local/bin/
+export PATH="$HOME/.local/bin:$PATH"
+yweather --lat <lat> --lon <lon> [options]
 ```
 
 ## CLI

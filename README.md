@@ -27,10 +27,31 @@ sudo yum install openjdk-21-jdk-headless
 
 Переименуй `api-key.txt.example` в `api-key.txt` и вставь ключ
 
-### 4. Запуск
+### 4. Сборка
 
 ```bash
-java -jar yweather.jar --place Екатеринбург --compact
+mvn clean package
+```
+
+### 5. Установка
+
+Скопируй скрипт запуска и JAR в локальную директорию:
+
+```bash
+mkdir -p ~/.local/bin
+cp target/appassembler/bin/yweather ~/.local/bin/
+cp target/yweather-1.0.0.jar ~/.local/bin/
+```
+
+Убедись, что `~/.local/bin` есть в `PATH`:
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+### 6. Запуск
+
+```bash
+yweather --place Екатеринбург --compact
 ```
 
 ## Добавление своих городов и мест
@@ -102,7 +123,8 @@ java -jar yweather.jar --place Екатеринбург --compact
 git clone https://github.com/daniil4jk/YandexWeatherCli
 cd YandexWeatherCli
 mvn clean package
-# JAR в target/yweather-1.0.0.jar
+# Скрипт запуска: target/appassembler/bin/yweather
+# JAR: target/yweather-1.0.0.jar
 ```
 
 ## Лицензия
