@@ -40,3 +40,6 @@ build/
 
 ### Project ###
 api-key.txt
+dependency-reduced-pom.xml
+src-*.tar
+src-*.zip
