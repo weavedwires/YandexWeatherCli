@@ -5,4 +5,9 @@ public final class ApiKeyConfig extends SomeConfig {
     public ApiKeyConfig() {
         super(API_KEY_FILE_NAME);
     }
+
+    @Override
+    public String read() {
+        return super.read().replace(System.lineSeparator(), "").trim();
+    }
 }
