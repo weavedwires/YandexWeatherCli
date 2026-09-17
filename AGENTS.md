@@ -4,15 +4,17 @@
 
 ```bash
 mvn package -q                              # builds target/yweather-1.1.0.jar (uber-jar)
-mkdir -p ~/.local/bin
-install -m 755 yweather ~/.local/bin/      # wrapper script from repo root
-cp target/yweather-1.1.0.jar ~/.local/bin/yweather.jar
+./install.sh                                # downloads release archive, installs + generates wrapper
 export PATH="$HOME/.local/bin:$PATH"
 yweather --place <name> [options]
 ```
 
-The `yweather` wrapper runs `yweather.jar` (or `yweather-*.jar`) located next to it.
-Releases ship the same layout: `yweather`, `yweather.jar`, `places.json`, `api-key.txt.example`, `SKILL.md`.
+`install.sh` downloads the release archive, extracts it to `~/.local/share/yweather`
+(jar + `places.json` + `api-key.txt.example`), and generates the `yweather` wrapper in
+`~/.local/bin`. The wrapper `cd`s into the install dir and runs `yweather.jar` from there,
+so `api-key.txt` and `places.json` are found in the process CWD. It also copies `SKILL.md`
+to the directory where `install.sh` was invoked.
+Releases ship: `yweather.jar`, `places.json`, `api-key.txt.example`, `README.md`, `SKILL.md`.
 
 ## CLI
 
@@ -30,7 +32,7 @@ Available fields: `hour`, `temp`, `feels_like`, `condition`, `prec_strength`, `p
 
 Output is pipe-delimited CSV with header row `date|field1|field2|...`.
 
-## Config Files (resolved: next to JAR → CWD)
+## Config Files (resolved: install dir `~/.local/share/yweather` → CWD)
 
 | File | Purpose |
 |------|---------|
@@ -44,6 +46,7 @@ Yandex Weather API v2 — `https://api.weather.yandex.ru/v2/forecast` with `X-Ya
 ## Project Layout
 
 ```
+install.sh                — installer: downloads release archive, generates wrapper
 src/main/java/ru/daniil4jk/yweather/
   Main.java              — entrypoint
   cli/                   — CLI args parsing (CliArgParser, CliArgs, HourFilter)

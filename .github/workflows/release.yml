@@ -51,8 +51,6 @@ jobs:
           JAR=$(ls target/yweather-*.jar | grep -v 'original-' | head -n1)
           mkdir -p release
           cp "${JAR}" release/yweather.jar
-          cp yweather release/yweather
-          chmod +x release/yweather
           cp places.json release/
           cp api-key.txt.example release/
           cp README.md release/

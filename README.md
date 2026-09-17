@@ -21,42 +21,44 @@ yweather --place Екатеринбург
 
 ## 2. Установка
 
-### Из релиза
-
-Скачай `yweather-<версия>.zip` со [страницы релизов](https://github.com/daniil4jk/YandexWeatherCli/releases)
-и распакуй в `~/.local/bin`:
+Установщик скачивает релизный архив, раскладывает его в `~/.local/share/yweather`
+и генерирует команду `yweather` в `~/.local/bin`:
 
 ```bash
-mkdir -p ~/.local/bin
-unzip yweather-*.zip -d ~/.local/bin
+curl -fsSL https://raw.githubusercontent.com/weavedwires/YandexWeatherCli/master/install.sh | sh
 ```
 
-### Из исходников
+Или скачай и запусти локально:
 
 ```bash
-git clone https://github.com/daniil4jk/YandexWeatherCli
+git clone https://github.com/weavedwires/YandexWeatherCli
 cd YandexWeatherCli
-mvn clean package
-
-mkdir -p ~/.local/bin
-install -m 755 yweather ~/.local/bin/
-cp target/yweather-1.1.0.jar ~/.local/bin/yweather.jar
+./install.sh
 ```
 
-В обоих случаях добавь `~/.local/bin` в `PATH` (если ещё не добавлен):
+Установщик также скопирует `SKILL.md` в каталог, откуда он был запущен —
+передай его используемому агенту, чтобы агент знал, как вызывать `yweather`.
+
+Опции установщика: `--version X.Y.Z` (по умолчанию — последний релиз), `--force`
+(перезаписать `places.json`). Пути настраиваются переменными `YWEATHER_INSTALL_DIR`
+и `YWEATHER_BIN_DIR`.
+
+Добавь `~/.local/bin` в `PATH` (если ещё не добавлен):
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-`yweather` — это wrapper, который запускает `yweather.jar`, лежащий с ним рядом.
+`yweather` — это сгенерированный wrapper, который переходит в каталог установки
+и запускает `yweather.jar` оттуда.
 
 ## 3. Настройка
 
-Файлы конфигурации ищутся **рядом с JAR**, а затем в **текущей директории**:
+Файлы конфигурации лежат в каталоге установки `~/.local/share/yweather`
+(wrapper запускает jar именно оттуда) и ищутся также в текущей директории:
 
-- `api-key.txt` — ключ Yandex Weather (обязателен). Переименуй `api-key.txt.example`
-  в `api-key.txt` и вставь ключ.
+- `api-key.txt` — ключ Yandex Weather (обязателен). При установке создаётся из
+  `api-key.txt.example` — вставь в него свой ключ.
 - `places.json` — список мест, доступных по имени (опционально; поставляется с релизом).
 
 ## 4. Запуск
