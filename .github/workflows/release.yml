@@ -44,6 +44,7 @@ jobs:
           cp places.json release/
           cp api-key.txt.example release/
           cp README.md release/
+          cp SKILL.md release/
           cd release
           zip -r "../yweather-${{ steps.version.outputs.VERSION }}.zip" .
           cd ..

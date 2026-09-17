@@ -12,7 +12,7 @@ yweather --place <name> [options]
 ```
 
 The `yweather` wrapper runs `yweather.jar` (or `yweather-*.jar`) located next to it.
-Releases ship the same layout: `yweather`, `yweather.jar`, `places.json`, `api-key.txt.example`.
+Releases ship the same layout: `yweather`, `yweather.jar`, `places.json`, `api-key.txt.example`, `SKILL.md`.
 
 ## CLI
 
