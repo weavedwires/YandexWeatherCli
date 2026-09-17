@@ -3,10 +3,10 @@
 ## Build & Run
 
 ```bash
-mvn package -q                              # builds target/yweather-1.0.0.jar (uber-jar)
+mvn package -q                              # builds target/yweather-1.1.0.jar (uber-jar)
 mkdir -p ~/.local/bin
 install -m 755 yweather ~/.local/bin/      # wrapper script from repo root
-cp target/yweather-1.0.0.jar ~/.local/bin/yweather.jar
+cp target/yweather-1.1.0.jar ~/.local/bin/yweather.jar
 export PATH="$HOME/.local/bin:$PATH"
 yweather --place <name> [options]
 ```

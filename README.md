@@ -40,7 +40,7 @@ mvn clean package
 
 mkdir -p ~/.local/bin
 install -m 755 yweather ~/.local/bin/
-cp target/yweather-1.0.0.jar ~/.local/bin/yweather.jar
+cp target/yweather-1.1.0.jar ~/.local/bin/yweather.jar
 ```
 
 В обоих случаях добавь `~/.local/bin` в `PATH` (если ещё не добавлен):
