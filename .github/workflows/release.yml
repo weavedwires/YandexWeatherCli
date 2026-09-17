@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Версия релиза, например 1.1.0'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -14,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -29,16 +34,23 @@ jobs:
       - name: Extract version
         id: version
         run: |
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
           else
-            echo "VERSION=latest" >> "$GITHUB_OUTPUT"
+            VERSION="${{ inputs.version }}"
           fi
+          VERSION="${VERSION#v}"
+          if [[ ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Некорректная версия: '${VERSION}'. Ожидается формат X.Y.Z" >&2
+            exit 1
+          fi
+          echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Package release archive
         run: |
+          JAR=$(ls target/yweather-*.jar | grep -v 'original-' | head -n1)
           mkdir -p release
-          cp target/yweather-1.0.0.jar release/yweather.jar
+          cp "${JAR}" release/yweather.jar
           cp yweather release/yweather
           chmod +x release/yweather
           cp places.json release/
@@ -49,9 +61,19 @@ jobs:
           zip -r "../yweather-${{ steps.version.outputs.VERSION }}.zip" .
           cd ..
 
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
         with:
+          name: yweather-${{ steps.version.outputs.VERSION }}
+          path: yweather-${{ steps.version.outputs.VERSION }}.zip
+          if-no-files-found: error
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ steps.version.outputs.VERSION }}
+          name: v${{ steps.version.outputs.VERSION }}
+          target_commitish: ${{ github.sha }}
+          make_latest: true
           files: yweather-${{ steps.version.outputs.VERSION }}.zip
           generate_release_notes: true
