@@ -78,8 +78,6 @@ yweather --lat 56.83 --lon 60.60 --hours 0-12
 | `--hours <N\|N-M>` | Один час (`5`) или диапазон (`12-22`). По умолчанию все часы |
 | `--fields <list>` | Какие поля выводить (через запятую) |
 
-Флага `--compact` нет: вывод всегда машиночитаемый.
-
 **По умолчанию** `--fields`: `hour,temp,feels_like,condition,prec_strength,prec_type,wind_speed,wind_gust,humidity`.
 
 Формат: pipe-разделительный CSV с заголовком `date|field1|field2|...`:
