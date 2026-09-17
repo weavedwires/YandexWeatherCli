@@ -1,98 +1,94 @@
-# YandexWeatherCli — AI Skill для прогноза погоды
+# YandexWeatherCli
 
-**YandexWeatherCli** — cli для Yandex Weather HTTP API (у них оно зовётся `Тариф "Оптимальный"`).
+CLI-утилита для прогноза погоды через Yandex Weather API (тариф «Оптимальный»).
+Выводит машиночитаемый pipe-разделительный CSV.
 
-## Быстрый старт
+Установленную команду можно вызывать одной строкой, указав только место:
 
-### 1. Установи Java 17+ туда, где агент сможет его видеть
-
-Для debian-образных:
 ```bash
-sudo apt install openjdk-21-jdk-headless
+yweather --place Екатеринбург
 ```
 
-Для redhat-производных
-```bash
-sudo yum install openjdk-21-jdk-headless
-```
+## Требования
 
-Или скачай с [adoptium.net](https://adoptium.net/).
+- **Java 17+** (проверить: `java -version`)
+- API-ключ Yandex Weather
 
-### 2. Получи API-ключ
+## 1. Получи API-ключ
 
-Зарегистрируйся на [Yandex Weather API](https://developer.tech.yandex.ru/services/). Тебе покажется ключ. 
+Зарегистрируйся на [Yandex Weather API](https://developer.tech.yandex.ru/services/).
 В бесплатном тарифе 30 запросов в день.
 
-### 3. Укажи ключ
+## 2. Установка
 
-Переименуй `api-key.txt.example` в `api-key.txt` и вставь ключ
+### Из релиза
 
-### 4. Сборка
-
-```bash
-mvn clean package
-```
-
-### 5. Установка
-
-Скопируй скрипт запуска и JAR в локальную директорию:
+Скачай `yweather-<версия>.zip` со [страницы релизов](https://github.com/daniil4jk/YandexWeatherCli/releases)
+и распакуй в `~/.local/bin`:
 
 ```bash
 mkdir -p ~/.local/bin
-cp target/appassembler/bin/yweather ~/.local/bin/
-cp target/yweather-1.0.0.jar ~/.local/bin/
+unzip yweather-*.zip -d ~/.local/bin
 ```
 
-Убедись, что `~/.local/bin` есть в `PATH`:
+### Из исходников
+
+```bash
+git clone https://github.com/daniil4jk/YandexWeatherCli
+cd YandexWeatherCli
+mvn clean package
+
+mkdir -p ~/.local/bin
+install -m 755 yweather ~/.local/bin/
+cp target/yweather-1.0.0.jar ~/.local/bin/yweather.jar
+```
+
+В обоих случаях добавь `~/.local/bin` в `PATH` (если ещё не добавлен):
+
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-### 6. Запуск
+`yweather` — это wrapper, который запускает `yweather.jar`, лежащий с ним рядом.
+
+## 3. Настройка
+
+Файлы конфигурации ищутся **рядом с JAR**, а затем в **текущей директории**:
+
+- `api-key.txt` — ключ Yandex Weather (обязателен). Переименуй `api-key.txt.example`
+  в `api-key.txt` и вставь ключ.
+- `places.json` — список мест, доступных по имени (опционально; поставляется с релизом).
+
+## 4. Запуск
 
 ```bash
-yweather --place Екатеринбург --compact
+yweather --place Екатеринбург
+yweather --place Москва --days 3
+yweather --place Москва --hours 12-22
+yweather --lat 56.83 --lon 60.60 --hours 0-12
 ```
-
-## Добавление своих городов и мест
-
-Файл `places.json` — список мест, которые ИИ может запрашивать по имени. Агент сможет добавлять туда твои места, 
-или ты сам можешь указать более точные координаты. 
-- Алиасов имён рекомендуется указывать как можно больше. Это повышает шанс, что агент даже при ошибке в написании 
-получит погоду, а не "неизвестный город"
-
-```json
-[
-   {
-      "names":
-      ["Москва", "Moscow"],
-      "lat": 55.755864,
-      "lon": 37.617698
-   },
-   {
-      "names":
-      ["Лондон", "London"],
-      "lat": 51.507351,
-      "lon": -0.127696
-   }
-]
-```
-
-## Использование с ИИ-агентом
-
-1. Распакуй архив в директорию с skills агента
-2. Уведоми его о появлении нового скилла, пусть он проверит что java ему доступна и запуск успешен
-3. Агент вызывает skill, получает в ответ таблицу с сырыми данными и формирует ответ пользователю
 
 ## CLI-флаги
 
 | Флаг | Описание |
 |------|----------|
-| `--place <name>` | Город из `places.json` |
-| `--lat / --lon` | Координаты (если нет в places.json) |
-| `--compact` | Машиночитаемый однострочный вывод |
-| `--hours <N>` | Один час (`5`) или диапазон (`0-12`) |
-| `--fields` | Какие поля выводить |
+| `--place <name>` | Место из `places.json` (русское или английское имя) |
+| `--lat`, `--lon` | Координаты (вместо `--place`) |
+| `--days <N>` | Количество дней прогноза (по умолчанию 1) |
+| `--hours <N\|N-M>` | Один час (`5`) или диапазон (`12-22`). По умолчанию все часы |
+| `--fields <list>` | Какие поля выводить (через запятую) |
+
+Флага `--compact` нет: вывод всегда машиночитаемый.
+
+**По умолчанию** `--fields`: `hour,temp,feels_like,condition,prec_strength,prec_type,wind_speed,wind_gust,humidity`.
+
+Формат: pipe-разделительный CSV с заголовком `date|field1|field2|...`:
+
+```
+date|hour|temp|feels_like|condition|...
+2026-06-14|0|+12|+10|Ясно|...
+2026-06-14|1|+11|+9|Ясно|...
+```
 
 ## Доступные поля в --fields
 
@@ -117,14 +113,25 @@ yweather --place Екатеринбург --compact
 - **`temp`** — всегда с явным знаком (`%+.0f`)
 - **`prec_strength`** — сырое значение из JSON; 0 = без осадков, >0 = интенсивность в мм/ч
 
-## Сборка из исходников (для разработки)
+## places.json
 
-```bash
-git clone https://github.com/daniil4jk/YandexWeatherCli
-cd YandexWeatherCli
-mvn clean package
-# Скрипт запуска: target/appassembler/bin/yweather
-# JAR: target/yweather-1.0.0.jar
+Список мест, которые можно запрашивать по имени через `--place`.
+Алиасов имён рекомендуется указывать как можно больше — это повышает шанс,
+что запрос сработает даже при ошибке в написании.
+
+```json
+[
+  {
+    "names": ["Москва", "Moscow"],
+    "lat": 55.755864,
+    "lon": 37.617698
+  },
+  {
+    "names": ["Лондон", "London"],
+    "lat": 51.507351,
+    "lon": -0.127696
+  }
+]
 ```
 
 ## Лицензия

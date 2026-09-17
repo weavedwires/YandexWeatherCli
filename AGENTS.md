@@ -3,13 +3,16 @@
 ## Build & Run
 
 ```bash
-mvn package -q                              # builds uber-jar + shell wrapper
+mvn package -q                              # builds target/yweather-1.0.0.jar (uber-jar)
 mkdir -p ~/.local/bin
-cp target/appassembler/bin/yweather ~/.local/bin/
-cp target/yweather-1.0.0.jar ~/.local/bin/
+install -m 755 yweather ~/.local/bin/      # wrapper script from repo root
+cp target/yweather-1.0.0.jar ~/.local/bin/yweather.jar
 export PATH="$HOME/.local/bin:$PATH"
-yweather --lat <lat> --lon <lon> [options]
+yweather --place <name> [options]
 ```
+
+The `yweather` wrapper runs `yweather.jar` (or `yweather-*.jar`) located next to it.
+Releases ship the same layout: `yweather`, `yweather.jar`, `places.json`, `api-key.txt.example`.
 
 ## CLI
 

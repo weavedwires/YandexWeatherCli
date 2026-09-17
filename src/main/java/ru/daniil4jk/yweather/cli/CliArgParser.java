@@ -57,12 +57,12 @@ public final class CliArgParser {
                 System.exit(1);
             }
         } else if (lat == null || lon == null) {
-            System.err.println("Укажите --lat <lat> --lon <lon> или --place <название>");
-            System.err.println("Использование: java -jar yweather.jar --lat <lat> --lon <lon> [options]");
-            System.err.println("              java -jar yweather.jar --place <название> [options]");
+            System.err.println("Укажите --place <название> или --lat <lat> --lon <lon>");
+            System.err.println("Использование: yweather --place <название> [options]");
+            System.err.println("              yweather --lat <lat> --lon <lon> [options]");
             System.err.println("Options:");
             System.err.println("  --days <N>        Количество дней прогноза (по умолч. 1)");
-            System.err.println("  --hours <N|->     Час или диапазон (3 или 12-22). По умолчанию все часы.");
+            System.err.println("  --hours <N|N-M>   Час или диапазон (3 или 12-22). По умолчанию все часы.");
             System.err.println("  --fields <list>   Поля для вывода");
             System.exit(1);
         }
