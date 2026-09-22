@@ -42,7 +42,7 @@ public final class RuLocalizer implements Localizer {
 
                 // Поля
                 Map.entry("date", "Дата"),
-                Map.entry("hour", "Час"),
+                Map.entry("value", "Час"),
                 Map.entry("temp", "Температура"),
                 Map.entry("feels_like", "Ощущается как"),
                 Map.entry("condition", "Облачность"),

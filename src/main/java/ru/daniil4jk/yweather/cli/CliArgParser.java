@@ -19,6 +19,7 @@ public final class CliArgParser {
         String lat = null, lon = null, place = null;
         int days = 1;
         int singleHour = -1;
+        boolean userFormat = false;
         String rangeStr = null;
 
         String[] fields = HourForecast.supportedFields();
@@ -26,6 +27,7 @@ public final class CliArgParser {
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
+                case "-u" -> userFormat = true;
                 case "--lat" -> lat = args[++i];
                 case "--lon" -> lon = args[++i];
                 case "--place" -> place = args[++i];
@@ -64,6 +66,7 @@ public final class CliArgParser {
             System.err.println("Использование: yweather --place <название> [options]");
             System.err.println("              yweather --lat <lat> --lon <lon> [options]");
             System.err.println("Options:");
+            System.err.println("  -u                Красивый вывод для пользователя (для ИИ не нужен)");
             System.err.println("  --days <N>        Количество дней прогноза (по умолч. 1)");
             System.err.println("  --hours <N|N-M>   Час или диапазон (3 или 12-22). По умолчанию все часы.");
             System.err.println("  --fields <list>   Поля для вывода");
@@ -84,6 +87,6 @@ public final class CliArgParser {
             fields = fieldsStr.split(",");
         }
 
-        return new CliArgs(lat, lon, days, filter, fields);
+        return new CliArgs(userFormat, lat, lon, days, filter, fields);
     }
 }

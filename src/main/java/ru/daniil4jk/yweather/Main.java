@@ -24,7 +24,7 @@ public class Main {
         var forecast = weatherClient.fetch(cfg);
 
         Localizer localizer = new RuLocalizer();
-        var table = new Table(forecast, localizer, cfg.fields());
-        System.out.println(table.drawSimple());
+        var table = new Table(forecast, localizer, cfg);
+        System.out.println(table.draw());
     }
 }

@@ -1,7 +1,7 @@
 package ru.daniil4jk.yweather.model;
 
 public record HourForecast(
-    int hour,
+    int value,
     double temp,
     double feelsLike,
     String condition,
@@ -15,7 +15,7 @@ public record HourForecast(
 
     public static String[] supportedFields() {
         return new String[] {
-                "hour",
+                "value",
                 "temp",
                 "feels_like",
                 "condition",
@@ -30,7 +30,7 @@ public record HourForecast(
 
     public String getFieldValue(String name) {
         return switch (name) {
-            case "hour" -> String.valueOf(hour());
+            case "value" -> String.valueOf(value());
             case "temp" -> formatTemp(temp());
             case "feels_like" -> formatTemp(feelsLike());
             case "condition" -> condition();
