@@ -1,6 +1,7 @@
 package ru.daniil4jk.yweather.cli;
 
 import ru.daniil4jk.yweather.config.PlaceLoader;
+import ru.daniil4jk.yweather.model.HourForecast;
 import ru.daniil4jk.yweather.model.Place;
 
 import java.util.Arrays;
@@ -19,7 +20,9 @@ public final class CliArgParser {
         int days = 1;
         int singleHour = -1;
         String rangeStr = null;
-        String fieldsStr = "hour,temp,feels_like,condition,prec_strength,prec_type,wind_speed,wind_gust,humidity";
+
+        String[] fields = HourForecast.supportedFields();
+        String fieldsStr = null;
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
@@ -77,7 +80,10 @@ public final class CliArgParser {
             filter = new HourFilter(0, 23);
         }
 
-        List<String> fields = Arrays.asList(fieldsStr.split(","));
+        if (fieldsStr != null) {
+            fields = fieldsStr.split(",");
+        }
+
         return new CliArgs(lat, lon, days, filter, fields);
     }
 }

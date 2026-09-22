@@ -55,7 +55,7 @@ public final class WebWeatherClient implements WeatherClient {
             System.exit(1);
         }
 
-        try (var fw = new FileWriter("resp.txt")) {
+        try (var fw = new FileWriter("last_response.txt")) {
             fw.append(resp.body());
         }
 

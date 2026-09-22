@@ -9,12 +9,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Table {
+public final class Table {
     private final String[][] table;
 
-    public Table(Forecast forecast, Localizer localMapper, String[] fields) { //вынести в отдельный класс
-        System.out.println(forecast);
-
+    public Table(Forecast forecast, Localizer localizer, String[] fields) { //todo вынести в отдельный класс
         int hoursInForecast = (int) forecast.days()
                 .stream()
                 .flatMap((Function<DayForecast, Stream<?>>) dayForecast -> dayForecast.hours().stream())
@@ -24,9 +22,10 @@ public class Table {
 
         table = new String[rows][params];
 
-        for (int i = 0; i < params; i++) {
+        table[0][0] = localizer.map("date");
+        for (int i = 1; i < params; i++) {
             String fieldName = fields[i];
-            table[0][i] = localMapper.mapFieldName(fieldName);
+            table[0][i] = localizer.map(fieldName);
         }
 
         int tableYPos = 1;
@@ -34,9 +33,9 @@ public class Table {
             for (HourForecast hour : day.hours()) {
                 table[tableYPos][0] = day.date();
                 for (int fieldNumber = 1; fieldNumber < fields.length; fieldNumber++) {
-                    String condition = hour.getFieldValue(fields[fieldNumber]);
-                    String localizedCondition = localMapper.mapCondition(condition);
-                    table[tableYPos][fieldNumber] = localizedCondition;
+                    String value = hour.getFieldValue(fields[fieldNumber]);
+                    String localValue = localizer.map(value);
+                    table[tableYPos][fieldNumber] = localValue;
                 }
                 tableYPos++;
             }
@@ -45,13 +44,11 @@ public class Table {
 
     public String drawSimple() {
         return Arrays.stream(table)
-                .map(s -> Arrays.stream(s)
-                        .collect(Collectors.joining("|"))
-                )
+                .map(s -> String.join("|", s))
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 
     public String drawBeauty() {
-        return null;
+return null;
     }
 }

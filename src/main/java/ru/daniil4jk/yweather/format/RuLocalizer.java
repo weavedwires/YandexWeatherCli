@@ -2,14 +2,13 @@ package ru.daniil4jk.yweather.format;
 
 import java.util.Map;
 
-public class RuLocalizer implements Localizer {
+public final class RuLocalizer implements Localizer {
 
-    private final Map<String, String> conditions;
-    private final Map<String, String> windDirs;
-    private final Map<String, String> fields;
+    private final Map<String, String> translations;
 
     public RuLocalizer() {
-        conditions = Map.ofEntries(
+        translations = Map.ofEntries(
+                // Погодные условия
                 Map.entry("clear", "Ясно"),
                 Map.entry("partly-cloudy", "Малооблачно"),
                 Map.entry("cloudy", "Облачно с прояснениями"),
@@ -28,45 +27,37 @@ public class RuLocalizer implements Localizer {
                 Map.entry("hail", "Град"),
                 Map.entry("thunderstorm", "Гроза"),
                 Map.entry("thunderstorm-with-rain", "Гроза с дождём"),
-                Map.entry("thunderstorm-with-hail", "Гроза с градом")
-        );
+                Map.entry("thunderstorm-with-hail", "Гроза с градом"),
+                Map.entry("none", "нет"),
 
-        windDirs = Map.of(
-                "nw", "СЗ",
-                "n",  "С",
-                "ne", "СВ",
-                "e",  "В",
-                "se", "ЮВ",
-                "s",  "Ю",
-                "sw", "ЮЗ",
-                "w",  "З"
-        );
+                // Направления ветра
+                Map.entry("nw", "СЗ"),
+                Map.entry("n",  "С"),
+                Map.entry("ne", "СВ"),
+                Map.entry("e",  "В"),
+                Map.entry("se", "ЮВ"),
+                Map.entry("s",  "Ю"),
+                Map.entry("sw", "ЮЗ"),
+                Map.entry("w",  "З"),
 
-        fields = Map.ofEntries(
+                // Поля
+                Map.entry("date", "Дата"),
                 Map.entry("hour", "Час"),
                 Map.entry("temp", "Температура"),
                 Map.entry("feels_like", "Ощущается как"),
-                Map.entry("condition", "Погодное явление"),
+                Map.entry("condition", "Облачность"),
                 Map.entry("prec_strength", "Интенсивность осадков"),
                 Map.entry("prec_type", "Тип осадков"),
                 Map.entry("wind_speed", "Скорость ветра"),
                 Map.entry("wind_gust", "Порывы ветра"),
+                Map.entry("wind_dir", "Направление ветра"),
                 Map.entry("humidity", "Влажность")
         );
     }
 
-    @Override
-    public String mapCondition(String en) {
-        return conditions.getOrDefault(en, en);
-    }
 
     @Override
-    public String mapWindDir(String dir) {
-        return windDirs.getOrDefault(dir, dir);
-    }
-
-    @Override
-    public String mapFieldName(String field) {
-        return fields.getOrDefault(field, field);
+    public String map(String param) {
+        return translations.getOrDefault(param, param);
     }
 }

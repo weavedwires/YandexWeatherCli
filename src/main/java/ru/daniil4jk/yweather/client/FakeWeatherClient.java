@@ -7,7 +7,7 @@ import ru.daniil4jk.yweather.model.Forecast;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class FakeWeatherClient implements WeatherClient {
+public final class FakeWeatherClient implements WeatherClient {
     private final WebResponseParser responseParser;
     private final ObjectMapper mapper;
 

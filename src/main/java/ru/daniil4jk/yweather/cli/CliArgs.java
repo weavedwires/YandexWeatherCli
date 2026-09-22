@@ -7,6 +7,6 @@ public record CliArgs(
         String lon,
         int days,
         HourFilter hourFilter,
-        List<String> fields
+        String[] fields
 ) {
 }

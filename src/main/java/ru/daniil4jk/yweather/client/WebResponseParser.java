@@ -8,7 +8,7 @@ import ru.daniil4jk.yweather.model.HourForecast;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ForecastParser {
+public final class WebResponseParser {
 
     public Forecast parse(JsonNode root) {
         JsonNode forecasts = root.get("forecasts");
